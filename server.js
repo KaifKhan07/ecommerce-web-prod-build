@@ -7,6 +7,7 @@ import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cors from "cors";
+const path = require("path");
 
 //configure env
 dotenv.config();
@@ -34,7 +35,12 @@ app.get("/", (req, res) => {
 
 //PORT
 const PORT = process.env.PORT || 8080;
+//static files
+app.use(express.static(path.join(__dirname, "./client/build")));
 
+app.get("*", function (req, res) {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+});
 //run listen
 app.listen(PORT, () => {
   console.log(
