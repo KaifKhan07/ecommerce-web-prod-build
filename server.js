@@ -7,41 +7,49 @@ import authRoutes from "./routes/authRoute.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import cors from "cors";
-const path = require("path");
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-//configure env
+// Get the filename and dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Configure env
 dotenv.config();
 
-//databse config
+// Database config
 connectDB();
 
-//rest object
+// Rest object
 const app = express();
 
-//middelwares
+// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-//routes
+// Routes
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
 
-//rest api
-// app.get("/", (req, res) => {
-//   res.send("<h1>Welcome to ecommerce app</h1>");
-// });
+// Rest API
+app.get("/", (req, res) => {
+  res.send("<h1>Welcome to ecommerce app</h1>");
+});
 
-//PORT
+// PORT
 const PORT = process.env.PORT || 8080;
-//static files
+
+// Static files
 app.use(express.static(path.join(__dirname, "./client/build")));
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
-//run listen
+
+// Run server
 app.listen(PORT, () => {
   console.log(
     `Server Running on ${process.env.DEV_MODE} mode on port ${PORT}`.bgCyan
